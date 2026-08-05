@@ -1,0 +1,182 @@
+[
+  {
+    "state": "Andhra Pradesh",
+    "capital": "Hyderabad",
+    "hint": "andha--HI"
+  },
+  {
+    "state": "Arunachal Pradesh",
+    "capital": "Itanagar",
+    "hint": "arun---EEENT"
+  },
+  {
+    "state": "Assam",
+    "capital": "Dispur",
+    "hint": "AO SAAM(COME EVENING)"
+  },
+  {
+    "state": "Bihar",
+    "capital": "Patna",
+    "hint": "bee---PET"
+  },
+  {
+    "state": "Chhattisgarh",
+    "capital": "Raipur",
+    "hint": "36bhojan---RAI"
+  },
+  {
+    "state": "Goa",
+    "capital": "Panaji",
+    "hint": "goa beach=PAAN"
+  },
+  {
+    "state": "Gujarat",
+    "capital": "Gandhinagar",
+    "hint": "gujrati--GANDHIJI"
+  },
+  {
+    "state": "Haryana",
+    "capital": "Chandigarh",
+    "hint": "hari--CHANDI"
+  },
+  {
+    "state": "Himachal Pradesh",
+    "capital": "Shimla",
+    "hint": "HP PETROL PUMP"
+  },
+  {
+    "state": "Jammu & Kashmir",
+    "capital": "Srinagar",
+    "hint": "GULAB JAMMUN+CASH---SRI SRI.."
+  },
+  {
+    "state": "Jharkhand",
+    "capital": "Ranchi",
+    "hint": "JHARANA KHANDA KHANDA-WRENCHI"
+  },
+  {
+    "state": "Karnataka",
+    "capital": "Bangalore",
+    "hint": "KARN --BANK LORRY"
+  },
+  {
+    "state": "Kerala",
+    "capital": "Thiruvananthapuram",
+    "hint": "KARELA TIR VAN"
+  },
+  {
+    "state": "Madhya Pradesh",
+    "capital": "Bhopal",
+    "hint": "MP=MEMBER OF PARLIAMENT---BHO BHO.."
+  },
+  {
+    "state": "Maharashtra",
+    "capital": "Mumbai",
+    "hint": "MAHAN RASTRA-MOM BYE"
+  },
+  {
+    "state": "Manipur",
+    "capital": "Imphal",
+    "hint": "MONEY----OMM FAL"
+  },
+  {
+    "state": "Meghalaya",
+    "capital": "Shillong",
+    "hint": "MEGH--CEILING"
+  },
+  {
+    "state": "Mizoram",
+    "capital": "Aizawl",
+    "hint": "ZOO RAAM---EYE JAAL"
+  },
+  {
+    "state": "Nagaland",
+    "capital": "Kohima",
+    "hint": "NAAG---KAUN HE MAA"
+  },
+  {
+    "state": "Odisha",
+    "capital": "Bhubaneshwar",
+    "hint": "ODISHI(BHUBAN ISWAR KA)"
+  },
+  {
+    "state": "Punjab",
+    "capital": "Chandigarh",
+    "hint": "PUNJABI= CHANDI"
+  },
+  {
+    "state": "Rajasthan",
+    "capital": "Jaipur",
+    "hint": "RAJA----JAI HO"
+  },
+  {
+    "state": "Sikkim",
+    "capital": "Gangtok",
+    "hint": "SIKH--GANG"
+  },
+  {
+    "state": "Tamil Nadu",
+    "capital": "Chennai",
+    "hint": "MEAL---CHAIN"
+  },
+  {
+    "state": "Telangana",
+    "capital": "Hyderabad",
+    "hint": "TEL--HI"
+  },
+  {
+    "state": "Tripura",
+    "capital": "Agartala",
+    "hint": "TREE+PURI----TALA"
+  },
+  {
+    "state": "Uttarakhand",
+    "capital": "Dehradun",
+    "hint": "UTTAR KHANDA KHANDA---DER ME NOON"
+  },
+  {
+    "state": "Uttar Pradesh",
+    "capital": "Lucknow",
+    "hint": "UP=UPPER --LOCK 29"
+  },
+  {
+    "state": "West Bengal",
+    "capital": "Kolkata",
+    "hint": "BENGAL TIGER---COAL KHATA"
+  },
+  {
+    "state": "Andaman and Nicobar Islands",
+    "capital": "Port Blair",
+    "hint": "ANDA-- BLOW"
+  },
+  {
+    "state": "Chandigarh",
+    "capital": "Chandigarh",
+    "hint": "CHANDI-- CHANDI"
+  },
+  {
+    "state": "Dadra and Nagar Haveli",
+    "capital": "Silvassa",
+    "hint": "DADA--SEAL BHASA"
+  },
+  {
+    "state": "Daman & Diu",
+    "capital": "Daman",
+    "hint": "diamond --Deo-- diamond"
+  },
+  {
+    "state": "The Government of NCT of Delhi",
+    "capital": "Delhi",
+    "hint": "DIL-- DIL"
+  },
+  {
+    "state": "Lakshadweep",
+    "capital": "Kavaratti",
+    "hint": "LAKSHYA---KAWA roti"
+  },
+  {
+    "state": "Puducherry",
+    "capital": "Puducherry",
+    "hint": "PED CHERRY---PED CHERRY"
+  }
+]

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Capital Shooter</title>
+    <meta name="description" content="Fun educational game - shoot the correct state capital!">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+
+        <!-- Hint Modal -->
+        <div id="hint-modal" class="hidden">
+            <div class="hint-box">
+                <h3>💡 Hint</h3>
+                <p id="hint-text"></p>
+                <button id="close-hint">Got it!</button>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast" class="hidden"></div>
+
+        <!-- Pause Overlay -->
+        <div id="pause-overlay" class="hidden">
+            <div>⏸ Paused</div>
+            <p>Press the button below to resume</p>
+            <div class="resume-hint">▶ Resume</div>
+        </div>
+
+        <!-- Top Question Area -->
+        <div id="question-board">
+            <p class="q-label">What is the capital of</p>
+            <h1 id="state-name">Loading…</h1>
+            <div id="score-bar">
+                <span id="score-value">0/0</span>
+            </div>
+            <!-- Options shown as colored pill indicators -->
+            <div id="options-row">
+                <div class="option-pill" id="opt-0">
+                    <span class="pill-dot dot-red"></span>
+                    <span class="pill-text" id="opt-text-0">—</span>
+                </div>
+                <div class="option-pill" id="opt-1">
+                    <span class="pill-dot dot-green"></span>
+                    <span class="pill-text" id="opt-text-1">—</span>
+                </div>
+                <div class="option-pill" id="opt-2">
+                    <span class="pill-dot dot-gold"></span>
+                    <span class="pill-text" id="opt-text-2">—</span>
+                </div>
+                <div class="option-pill" id="opt-3">
+                    <span class="pill-dot dot-blue"></span>
+                    <span class="pill-text" id="opt-text-3">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Play Area (pointer-events: none globally; only SVG used for trajectory display) -->
+        <div id="play-area" style="pointer-events: none;">
+            <!-- Upper wall (candy bar image) -->
+            <div id="upper-wall"></div>
+
+            <!-- Balls (no text inside) -->
+            <div class="ball color-red"   id="ball-0"></div>
+            <div class="ball color-green" id="ball-1"></div>
+            <div class="ball color-gold"  id="ball-2"></div>
+            <div class="ball color-blue"  id="ball-3"></div>
+        </div>
+
+        <!-- Trajectory SVG — direct child of container so coords match container space -->
+        <svg id="trajectory-svg" xmlns="http://www.w3.org/2000/svg"
+             style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20;"></svg>
+
+        <!-- Cannon area (press & drag to aim, release to fire) -->
+        <div id="cannon-area">
+            <div id="cannon-pivot">
+                <div id="cannon-barrel"></div>
+            </div>
+            <div id="cannon-body">
+                <div id="cannon-ball-gem"></div>
+            </div>
+            <div id="cannon-stand"></div>
+            <div id="bullet" class="hidden"></div>
+        </div>
+
+        <!-- Floor / Bottom Bar -->
+        <div id="bottom-bar">
+            <!-- 50/50 crate -->
+            <div id="fifty-area">
+                <button id="fifty-fifty-btn" class="icon-btn" title="50/50">
+                    <img src="assets/crate.png" alt="Crate" />
+                    <div class="fifty-ball"><span>50/50</span></div>
+                </button>
+            </div>
+
+            <!-- Buttons right -->
+            <div id="right-btns">
+                <button id="hint-btn"    class="round-btn blue-btn"  title="Hint"><span>💡</span></button>
+                <button id="restart-btn" class="round-btn green-btn" title="Restart"><span>🔄</span></button>
+                <button id="pause-btn"   class="round-btn pink-btn"  title="Pause"><span>⏸</span></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
