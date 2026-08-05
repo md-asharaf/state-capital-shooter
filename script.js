@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const hintText = document.getElementById('hint-text');
   const closeHint = document.getElementById('close-hint');
   const toast = document.getElementById('toast');
-  const restartBtn = document.getElementById('restart-btn');
+  const loadedBall = document.getElementById('loaded-ball');
+  const muzzleFlash = document.getElementById('muzzle-flash');
+  const skipBtn = document.getElementById('skip-btn');
   const pauseBtn = document.getElementById('pause-btn');
   const pauseOverlay = document.getElementById('pause-overlay');
   const scoreEl = document.getElementById('score-value');
@@ -183,6 +185,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   function fireBullet(startX, startY, angleDeg) {
     isShooting = true;
     balls.forEach(b => b.classList.remove('floating'));
+    
+    loadedBall.style.opacity = '0';
+    muzzleFlash.classList.remove('fire-flash');
+    void muzzleFlash.offsetWidth;
+    muzzleFlash.classList.add('fire-flash');
 
     const cRect = container.getBoundingClientRect();
     const paRect = playArea.getBoundingClientRect();
@@ -234,6 +241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     bulletEl.classList.add('hidden');
     if (!hit) {
       isShooting = false;
+      loadedBall.style.opacity = '1';
       showToast('💨 Miss!', 'error');
       balls.forEach(b => { if (!b.classList.contains('hidden')) b.classList.add('floating'); });
     }
@@ -241,7 +249,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ─── Check Answer ─────────────────────────────────────────
   function checkAnswer(index, ball, ballCX, ballCY) {
-    isShooting = false;
     attempted++;
     const correct = currentOptions[index] === currentQuestion.capital;
 
@@ -277,11 +284,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const originX = (cx + cRect.left) / window.innerWidth;
       const originY = (cy + cRect.top) / window.innerHeight;
 
-      const count = 120;
+      const count = 300;
       const defaults = {
         origin: { x: originX, y: originY },
         colors: CONFETTI_COLORS,
         zIndex: 9999,
+        scalar: 1.4,
         disableForReducedMotion: true
       };
 
@@ -308,6 +316,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     fiftyBtn.disabled = false;
     clearTrajectory();
     bulletEl.classList.add('hidden');
+    loadedBall.style.opacity = '1';
 
 
     // Scatter remaining visible balls out before loading new question
@@ -431,7 +440,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   closeHint.addEventListener('click', () => hintModal.classList.add('hidden'));
 
-  restartBtn.addEventListener('click', () => {
+  skipBtn.addEventListener('click', () => {
     cancelAnimationFrame(animFrame);
     isShooting = false;
     isAiming = false;
