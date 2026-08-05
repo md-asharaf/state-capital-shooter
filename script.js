@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const restartBtn = document.getElementById('restart-btn');
   const pauseBtn = document.getElementById('pause-btn');
   const pauseOverlay = document.getElementById('pause-overlay');
-  const scoreEl      = document.getElementById('score-value');
+  const scoreEl = document.getElementById('score-value');
 
   // ─── State ────────────────────────────────────────────────
   let currentQuestion = null;
@@ -46,14 +46,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   let pivotX = 0, pivotY = 0;
 
   // 9 cols × 4 rows = 36 cells
-  // left: 8%→85% (avoids left/right wall, gives ~8% padding each side)
-  // top: row gaps of 22% each, starting at 8% (well below candybar)
+  // 9 cols × 4 rows = 36 cells
   const GRID_CELLS = [];
   for (let r = 0; r < 4; r++) {
     for (let c = 0; c < 9; c++) {
       GRID_CELLS.push({
-        top: 8 + r * 22,   //  8, 30, 52, 74%
-        left: 8 + c * 8.5   //  8, 16.5, 25, 33.5, 42, 50.5, 59, 67.5, 76%
+        row: r,
+        left: 8 + c * 8.5   // avoids walls
       });
     }
   }
@@ -152,7 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const paRect = playArea.getBoundingClientRect();
     const wallLeft = paRect.left - cRect.left;
     const wallRight = paRect.right - cRect.left;
-    const wallTop = paRect.top - cRect.top + 22;
+    const wallTop = paRect.top - cRect.top + 12;
 
     const rad = angleDeg * Math.PI / 180;
     let dirX = Math.sin(rad);
@@ -160,7 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const STEP = 22;
 
     let sx = ox, sy = oy;
-    for (let d = 0; d < 7; d++) {
+    for (let d = 0; d < 5; d++) {
       sx += dirX * STEP;
       sy += dirY * STEP;
       if (sx < wallLeft + 5) { sx = wallLeft + 5; dirX = Math.abs(dirX); }
@@ -189,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const paRect = playArea.getBoundingClientRect();
     const wallLeft = paRect.left - cRect.left;
     const wallRight = paRect.right - cRect.left;
-    const wallTop = paRect.top - cRect.top + 22;
+    const wallTop = paRect.top - cRect.top + 12;
 
     const SPEED = 9;
     const rad = angleDeg * Math.PI / 180;
@@ -235,6 +234,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     bulletEl.classList.add('hidden');
     if (!hit) {
       isShooting = false;
+      showToast('💨 Miss!', 'error');
       balls.forEach(b => { if (!b.classList.contains('hidden')) b.classList.add('floating'); });
     }
   }
@@ -245,6 +245,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     attempted++;
     const correct = currentOptions[index] === currentQuestion.capital;
 
+    scoreEl.textContent = `${score}/${attempted}`;
+
     if (correct) {
       score++;
       scoreEl.textContent = `${score}/${attempted}`;
@@ -254,7 +256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       ball.classList.remove('floating');
       ball.classList.add('popping');
       spawnConfetti(ballCX, ballCY);
-      showToast('✅ Correct!', 'success');
+      showToast('🎉 Correct!', 'success');
     } else {
       triggerCannonShake();
       ball.classList.remove('floating');
@@ -270,39 +272,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ─── Confetti burst ───────────────────────────────────────
   const CONFETTI_COLORS = ['#ffd43b', '#ff6b6b', '#69db7c', '#74c0fc', '#f06595', '#fff', '#a9e34b'];
   function spawnConfetti(cx, cy) {
-    for (let i = 0; i < 22; i++) {
-      const el = document.createElement('div');
-      el.style.cssText = `
-        position: absolute;
-        width: ${6 + Math.random() * 6}px;
-        height: ${6 + Math.random() * 6}px;
-        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-        background: ${CONFETTI_COLORS[i % CONFETTI_COLORS.length]};
-        pointer-events: none;
-        z-index: 999;
-        left: ${cx - 4}px;
-        top:  ${cy - 4}px;
-      `;
-      container.appendChild(el);
+    if (typeof confetti === 'function') {
+      const cRect = container.getBoundingClientRect();
+      const originX = (cx + cRect.left) / window.innerWidth;
+      const originY = (cy + cRect.top) / window.innerHeight;
 
-      const angle = (i / 22) * 360 + (Math.random() * 20 - 10);
-      const dist  = 55 + Math.random() * 80;
-      const tx    = Math.cos(angle * Math.PI / 180) * dist;
-      const ty    = Math.sin(angle * Math.PI / 180) * dist;
-      const rot   = (Math.random() * 720 - 360) + 'deg';
-      const delay = Math.random() * 100;
+      const count = 120;
+      const defaults = {
+        origin: { x: originX, y: originY },
+        colors: CONFETTI_COLORS,
+        zIndex: 9999,
+        disableForReducedMotion: true
+      };
 
-      // Web Animations API — each element gets its own computed values
-      const anim = el.animate([
-        { transform: 'translate(0,0) rotate(0deg) scale(1)',          opacity: 1 },
-        { transform: `translate(${tx}px,${ty}px) rotate(${rot}) scale(0.4)`, opacity: 0 }
-      ], {
-        duration: 650 + Math.random() * 200,
-        delay,
-        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        fill: 'forwards'
-      });
-      anim.onfinish = () => el.remove();
+      function fire(particleRatio, opts) {
+        confetti(Object.assign({}, defaults, opts, {
+          particleCount: Math.floor(count * particleRatio)
+        }));
+      }
+
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
     }
   }
 
@@ -370,11 +363,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const BALL_D = 29;
       for (const cell of shuffled) {
         const cx = (cell.left / 100) * paRect.width;
-        const cy = (cell.top / 100) * paRect.height;
+        const cy = 25 + cell.row * 39;
         let ok = true;
         for (const c of chosen) {
           const ox = (c.left / 100) * paRect.width;
-          const oy = (c.top / 100) * paRect.height;
+          const oy = 25 + c.row * 39;
           if (Math.hypot(cx - ox, cy - oy) < BALL_D + 8) { ok = false; break; }
         }
         if (ok) chosen.push(cell);
@@ -387,7 +380,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ball.style.opacity = '';
         ball.style.animation = '';
         ball.style.left = `${chosen[i].left}%`;
-        ball.style.top = `${chosen[i].top}%`;
+        ball.style.top = `${25 + chosen[i].row * 39}px`;
         ball.style.animationDelay = `${i * 0.08}s`;
         setTimeout(() => {
           ball.classList.add('entering');

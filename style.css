@@ -3,7 +3,7 @@
 
 /* ─── Body ─── */
 body {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Inter', sans-serif;
     background: #1a78c2;
     height: 100vh;
     display: flex;
@@ -25,6 +25,7 @@ body {
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    border-radius: 24px;
 }
 
 /* ─── Question Board ─── */
@@ -38,18 +39,20 @@ body {
 }
 
 .q-label {
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2rem;
     color: rgba(255,255,255,0.8);
-    text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 #state-name {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.7rem;
-    color: #fff;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    font-family: 'Inter', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffd43b, #ff922b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
     margin-top: 2px;
     margin-bottom: 10px;
 }
@@ -63,6 +66,8 @@ body {
     padding-bottom: 4px;
     pointer-events: none; /* options not clickable */
     user-select: none;
+    margin-top: 4px;
+    margin-bottom: 20px;
 }
 
 .option-pill {
@@ -95,7 +100,7 @@ body {
 .dot-blue  { background: radial-gradient(circle at 35% 30%, #74c0fc, #1971c2); }
 
 .pill-text {
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Inter', sans-serif;
     font-size: 0.78rem;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0,0,0,0.4);
@@ -116,9 +121,15 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 22px;
-    background: url('assets/candybar.jpeg') center / auto 100% repeat-x;
-    border-bottom: 2px solid rgba(0,0,0,0.2);
+    height: 12px;
+    background: repeating-linear-gradient(
+        45deg,
+        #ff6b6b,
+        #ff6b6b 8px,
+        #ffffff 8px,
+        #ffffff 16px
+    );
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     z-index: 10;
 }
 
@@ -295,53 +306,27 @@ body {
 
 #fifty-area {
     position: relative;
-    width: 80px;
-    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 #fifty-fifty-btn {
-    background: none;
+    background: transparent;
     border: none;
+    outline: none;
     cursor: pointer;
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
-    transition: transform 0.15s;
+    transition: transform 0.1s, opacity 0.2s;
 }
-#fifty-fifty-btn:hover  { transform: scale(1.08); }
-#fifty-fifty-btn:active { transform: scale(0.95); }
-#fifty-fifty-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-#fifty-fifty-btn img { width: 68px; height: 68px; object-fit: contain; display: block; }
-
-.fifty-ball {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #74c0fc, #1971c2);
-    box-shadow: inset -3px -3px 8px rgba(0,0,0,0.4), inset 2px 2px 5px rgba(255,255,255,0.3), 0 3px 8px rgba(0,0,0,0.4);
-    position: absolute;
-    top: -2px;
-    right: -4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-}
-.fifty-ball span {
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.48rem;
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
-    text-align: center;
-    line-height: 1;
-}
+#fifty-fifty-btn:active { transform: translateY(3px); }
+#fifty-fifty-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 #right-btns { display: flex; gap: 8px; align-items: center; }
 
@@ -359,7 +344,7 @@ body {
     transition: transform 0.1s, box-shadow 0.1s;
 }
 .round-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
-.green-btn { background: linear-gradient(to bottom, #51cf66, #2f9e44); }
+.orange-btn { background: linear-gradient(to bottom, #ff922b, #e8590c); }
 .pink-btn  { background: linear-gradient(to bottom, #f06595, #c2255c); }
 .blue-btn  { background: linear-gradient(to bottom, #4dabf7, #1971c2); }
 
@@ -369,16 +354,20 @@ body {
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%) scale(1);
-    background: rgba(0,0,0,0.82);
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     color: #fff;
     padding: 16px 34px;
-    border-radius: 18px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.7rem;
+    border-radius: 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.8rem;
     z-index: 200;
     text-align: center;
     pointer-events: none;
     animation: popIn 0.25s cubic-bezier(0.23,1,0.32,1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 #toast.success { color: #69db7c; }
 #toast.error   { color: #ff6b6b; }
@@ -410,7 +399,7 @@ body {
     max-width: 320px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
-.hint-box h3 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; margin-bottom: 10px; color: #e67700; }
+.hint-box h3 { font-family: 'Inter', sans-serif; font-size: 1.3rem; margin-bottom: 10px; color: #e67700; }
 .hint-box p  { font-size: 1rem; font-weight: bold; margin-bottom: 16px; color: #444; line-height: 1.4; }
 .hint-box button {
     background: linear-gradient(to bottom, #ffd43b, #e67700);
@@ -418,7 +407,7 @@ body {
     border: none;
     padding: 9px 26px;
     border-radius: 12px;
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Inter', sans-serif;
     cursor: pointer;
     font-size: 1rem;
     box-shadow: 0 3px 0 rgba(0,0,0,0.25);
@@ -437,13 +426,13 @@ body {
     justify-content: center;
     align-items: center;
     color: #fff;
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Inter', sans-serif;
     font-size: 2.4rem;
     backdrop-filter: blur(4px);
     cursor: pointer;
 }
 #pause-overlay.hidden { display: none; }
-#pause-overlay p { font-size: 0.95rem; margin-top: 8px; color: rgba(255,255,255,0.7); font-family: 'Nunito', sans-serif; }
+#pause-overlay p { font-size: 0.95rem; margin-top: 8px; color: rgba(255,255,255,0.7); font-family: 'Inter', sans-serif; }
 #pause-overlay .resume-hint {
     margin-top: 20px;
     font-size: 1rem;
@@ -451,7 +440,7 @@ body {
     border: 2px solid rgba(255,255,255,0.5);
     border-radius: 12px;
     padding: 8px 22px;
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Inter', sans-serif;
     color: #fff;
     cursor: pointer;
 }
@@ -489,7 +478,7 @@ body {
     padding: 3px 10px;
 }
 #score-value {
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Inter', sans-serif;
     font-size: 1.1rem;
     color: #ffd43b;
     text-shadow: 0 1px 4px rgba(0,0,0,0.5);

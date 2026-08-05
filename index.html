@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>State Capital Shooter</title>
     <meta name="description" content="Fun educational game - shoot the correct state capital!">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <div id="game-container">
@@ -88,18 +89,19 @@
 
         <!-- Floor / Bottom Bar -->
         <div id="bottom-bar">
-            <!-- 50/50 crate -->
+            <!-- 50/50 button -->
             <div id="fifty-area">
-                <button id="fifty-fifty-btn" class="icon-btn" title="50/50">
-                    <img src="assets/crate.png" alt="Crate" />
-                    <div class="fifty-ball"><span>50/50</span></div>
+                <button id="fifty-fifty-btn" title="50/50">
+                    <img src="assets/fifty.png" alt="50/50" style="width: 100%; height: 100%; object-fit: contain;">
                 </button>
             </div>
 
             <!-- Buttons right -->
             <div id="right-btns">
                 <button id="hint-btn"    class="round-btn blue-btn"  title="Hint"><span>💡</span></button>
-                <button id="restart-btn" class="round-btn green-btn" title="Restart"><span>🔄</span></button>
+                <button id="restart-btn" class="round-btn orange-btn" title="Skip">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white; transform: scale(1.1);"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                </button>
                 <button id="pause-btn"   class="round-btn pink-btn"  title="Pause"><span>⏸</span></button>
             </div>
         </div>
