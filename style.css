@@ -28,13 +28,30 @@ body {
     border-radius: 24px;
 }
 
+/* ─── Top Header ─── */
+#top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    z-index: 15;
+    position: relative;
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+}
+#app-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
 /* ─── Question Board ─── */
 #question-board {
     text-align: center;
     padding: 10px 12px 8px;
     z-index: 10;
     flex-shrink: 0;
-    background: rgba(0,0,0,0.12);
     position: relative;
 }
 
@@ -67,7 +84,7 @@ body {
     pointer-events: none; /* options not clickable */
     user-select: none;
     margin-top: 4px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .option-pill {
@@ -129,7 +146,6 @@ body {
         #ffffff 8px,
         #ffffff 16px
     );
-    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     z-index: 10;
 }
 
@@ -539,21 +555,29 @@ body {
 /* ─── Score counter ─── */
 /* ─── Score ─── */
 #score-bar {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0;
-    background: rgba(0,0,0,0.25);
-    border-radius: 14px;
-    padding: 3px 10px;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    padding: 6px 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.3);
+}
+#score-icon {
+    font-size: 1.3rem;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
 }
 #score-value {
     font-family: 'Inter', sans-serif;
-    font-size: 1.1rem;
-    color: #ffd43b;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffe066, #f59f00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
     letter-spacing: 1px;
 }
 #score-value.bump {
