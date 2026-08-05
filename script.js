@@ -280,9 +280,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const CONFETTI_COLORS = ['#ffd43b', '#ff6b6b', '#69db7c', '#74c0fc', '#f06595', '#fff', '#a9e34b'];
   function spawnConfetti(cx, cy) {
     if (typeof confetti === 'function') {
-      const cRect = container.getBoundingClientRect();
-      const originX = (cx + cRect.left) / window.innerWidth;
-      const originY = (cy + cRect.top) / window.innerHeight;
+      const originX = 0.5;
+      const originY = 0.5;
 
       const count = 300;
       const defaults = {
