@@ -2,9 +2,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ─── Load Data ────────────────────────────────────────────
   let questions = [];
+  let unusedQuestions = [];
   try {
     const res = await fetch('data.json');
     questions = await res.json();
+    unusedQuestions = [...questions];
   } catch (e) {
     console.error('Failed to load data.json', e);
     return;
@@ -337,8 +339,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       currentAngleDeg = 0;
 
       if (questions.length === 0) return;
-      const qIndex = Math.floor(Math.random() * questions.length);
-      currentQuestion = questions[qIndex];
+      if (unusedQuestions.length === 0) {
+        showToast('🎉 All questions completed! Starting next round!', 'success');
+        unusedQuestions = [...questions];
+      }
+      const qIndex = Math.floor(Math.random() * unusedQuestions.length);
+      currentQuestion = unusedQuestions[qIndex];
+      unusedQuestions.splice(qIndex, 1);
 
       // Question text entrance
       stateNameEl.classList.remove('question-entering');
@@ -448,6 +455,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     scoreEl.textContent = '0/0';
     bulletEl.classList.add('hidden');
     clearTrajectory();
+    unusedQuestions = [...questions];
     loadNextQuestion();
   });
 
