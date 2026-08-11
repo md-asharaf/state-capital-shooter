@@ -6,6 +6,7 @@ body {
     font-family: 'Inter', sans-serif;
     background: #1a78c2;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,6 +20,7 @@ body {
     width: 100%;
     max-width: 420px;
     height: 100vh;
+    height: 100dvh;
     max-height: 840px;
     background: #2196f3;
     display: flex;
@@ -470,33 +472,55 @@ body {
 .pink-btn  { background: linear-gradient(to bottom, #f06595, #c2255c); }
 .blue-btn  { background: linear-gradient(to bottom, #4dabf7, #1971c2); }
 
-/* ─── Toast ─── */
-#toast {
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    color: #fff;
-    padding: 16px 34px;
-    border-radius: 24px;
-    font-family: 'Inter', sans-serif;
-    font-size: 1.8rem;
-    z-index: 200;
-    text-align: center;
-    pointer-events: none;
-    animation: popIn 0.25s cubic-bezier(0.23,1,0.32,1);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+/* ─── Feedback Popup ─── */
+.feedback-popup {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Bangers', cursive;
+  font-size: clamp(2rem, 6vmin, 3.5rem);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  pointer-events: none;
+  z-index: 999;
+  text-shadow: 
+    0 4px 0 rgba(0,0,0,0.8),
+    0 -2px 0 rgba(0,0,0,0.8),
+    2px 0 0 rgba(0,0,0,0.8),
+    -2px 0 0 rgba(0,0,0,0.8),
+    4px 4px 10px rgba(0,0,0,0.5);
+  animation: popFeedback 1.2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-#toast.success { color: #69db7c; }
-#toast.error   { color: #ff6b6b; }
-#toast.hidden  { display: none; }
-@keyframes popIn {
-    from { transform: translate(-50%,-50%) scale(0.3); opacity: 0; }
-    to   { transform: translate(-50%,-50%) scale(1);   opacity: 1; }
+
+.feedback-popup.correct {
+  color: #69db7c;
+}
+
+.feedback-popup.wrong {
+  color: #ff6b6b;
+}
+
+@keyframes popFeedback {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30%) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -55%) scale(1.1);
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -70%) scale(0.8);
+  }
 }
 
 /* ─── Hint Modal ─── */

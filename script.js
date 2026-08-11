@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ─── DOM ──────────────────────────────────────────────────
   const container = document.getElementById('game-container');
+  const qLabelEl = document.querySelector('.q-label');
   const stateNameEl = document.getElementById('state-name');
   const playArea = document.getElementById('play-area');
   const balls = [0, 1, 2, 3].map(i => document.getElementById(`ball-${i}`));
@@ -28,10 +29,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const hintModal = document.getElementById('hint-modal');
   const hintText = document.getElementById('hint-text');
   const closeHint = document.getElementById('close-hint');
-  const toast = document.getElementById('toast');
   const loadedBall = document.getElementById('loaded-ball');
   const muzzleFlash = document.getElementById('muzzle-flash');
-  const skipBtn = document.getElementById('skip-btn');
+  const restartBtn = document.getElementById('restart-btn');
   const pauseBtn = document.getElementById('pause-btn');
   const pauseOverlay = document.getElementById('pause-overlay');
   const scoreEl = document.getElementById('score-value');
@@ -39,6 +39,53 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ─── State ────────────────────────────────────────────────
   let currentQuestion = null;
   let currentOptions = [];
+  let questionNumber = 1;
+
+  // ─── Audio Synthesis ────────────────────────────────────────
+  let audioCtx = null;
+  function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+  function playTone(freq, type, duration, vol=0.1) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  }
+  function playShootSound() {
+    initAudio();
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.3);
+  }
+  function playCorrectSound() {
+    initAudio();
+    playTone(523.25, 'sine', 0.15, 0.2); 
+    setTimeout(() => playTone(659.25, 'sine', 0.15, 0.2), 100); 
+    setTimeout(() => playTone(783.99, 'sine', 0.3, 0.2), 200); 
+  }
+  function playWrongSound() {
+    initAudio();
+    playTone(200, 'sawtooth', 0.3, 0.2);
+    setTimeout(() => playTone(150, 'sawtooth', 0.4, 0.2), 150);
+  }
   let isShooting = false;
   let isPaused = false;
   let isAiming = false;
@@ -185,6 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ─── Fire Bullet ──────────────────────────────────────────
   function fireBullet(startX, startY, angleDeg) {
+    playShootSound();
     isShooting = true;
     balls.forEach(b => b.classList.remove('floating'));
     
@@ -251,29 +299,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ─── Check Answer ─────────────────────────────────────────
   function checkAnswer(index, ball, ballCX, ballCY) {
-    attempted++;
     const correct = currentOptions[index] === currentQuestion.capital;
 
-    scoreEl.textContent = `${score}/${attempted}`;
-
     if (correct) {
-      score++;
-      scoreEl.textContent = `${score}/${attempted}`;
+      score += 100;
+      scoreEl.textContent = score;
       scoreEl.classList.remove('bump');
       void scoreEl.offsetWidth;
       scoreEl.classList.add('bump');
       ball.classList.remove('floating');
       ball.classList.add('popping');
       spawnConfetti(ballCX, ballCY);
-      showToast('🎉 Correct!', 'success');
+      playCorrectSound();
+      showToast('+100 CORRECT!', 'correct');
     } else {
       triggerCannonShake();
+      score = Math.max(0, score - 10);
+      scoreEl.textContent = score;
+      scoreEl.classList.remove('bump');
+      void scoreEl.offsetWidth;
+      scoreEl.classList.add('bump');
       ball.classList.remove('floating');
       // Scatter exit direction
       const exitClasses = ['exit-left', 'exit-right', 'exit-up'];
       ball.classList.add(exitClasses[index % 3]);
       optPills[index].classList.add('removed');
-      showToast('❌ Wrong!', 'error');
+      playWrongSound();
+      showToast('-10 WRONG!', 'wrong');
     }
     setTimeout(loadNextQuestion, 1300);
   }
@@ -351,7 +403,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       stateNameEl.classList.remove('question-entering');
       void stateNameEl.offsetWidth;
       stateNameEl.classList.add('question-entering');
+      qLabelEl.textContent = `${questionNumber}. What is the capital of`;
       stateNameEl.textContent = currentQuestion.state + ' ?';
+      questionNumber++;
 
       // 3 unique wrong options
       const wrong = [];
@@ -409,13 +463,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 480); // wait for exit animations
   }
 
-  // ─── Toast ────────────────────────────────────────────────
-  let toastTimer = null;
+  // ─── Feedback Popup ────────────────────────────────────────
   function showToast(msg, type) {
-    clearTimeout(toastTimer);
-    toast.textContent = msg;
-    toast.className = `toast ${type}`;
-    toastTimer = setTimeout(() => toast.classList.add('hidden'), 1200);
+    const popup = document.createElement('div');
+    popup.className = `feedback-popup ${type}`;
+    popup.textContent = msg;
+    container.appendChild(popup);
+    setTimeout(() => popup.remove(), 1200);
   }
 
   // ─── 50/50 ────────────────────────────────────────────────
@@ -446,13 +500,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   closeHint.addEventListener('click', () => hintModal.classList.add('hidden'));
 
-  skipBtn.addEventListener('click', () => {
+  restartBtn.addEventListener('click', () => {
     cancelAnimationFrame(animFrame);
     isShooting = false;
     isAiming = false;
     score = 0;
     attempted = 0;
-    scoreEl.textContent = '0/0';
+    questionNumber = 1;
+    scoreEl.textContent = '0';
     bulletEl.classList.add('hidden');
     clearTrajectory();
     unusedQuestions = [...questions];

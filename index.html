@@ -6,7 +6,7 @@
     <title>State Capital Shooter</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <meta name="description" content="Fun educational game - shoot the correct state capital!">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Bangers&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
@@ -22,14 +22,12 @@
             </div>
         </div>
 
-        <!-- Toast -->
-        <div id="toast" class="hidden"></div>
 
         <!-- Pause Overlay -->
         <div id="pause-overlay" class="hidden">
-            <div>⏸ Paused</div>
+            <div>Paused</div>
             <p>Press the button below to resume</p>
-            <div class="resume-hint">▶ Resume</div>
+            <div class="resume-hint">Resume</div>
         </div>
 
         <!-- Top App Header -->
@@ -37,7 +35,7 @@
             <img id="app-logo" src="assets/logo.png" alt="State Shooter">
             <div id="score-bar">
                 <span id="score-icon">🏆</span>
-                <span id="score-value">0/0</span>
+                <span id="score-value">0</span>
             </div>
         </div>
 
@@ -109,8 +107,8 @@
             <!-- Buttons right -->
             <div id="right-btns">
                 <button id="hint-btn"    class="round-btn blue-btn"  title="Hint"><span>💡</span></button>
-                <button id="skip-btn" class="round-btn orange-btn" title="Skip">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white; transform: scale(1.1);"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                <button id="restart-btn" class="round-btn orange-btn" title="Restart">
+                    <span style="color: white; font-size: 1.4rem; padding-bottom: 2px; font-family: 'Inter', sans-serif;">🔄</span>
                 </button>
                 <button id="pause-btn"   class="round-btn pink-btn"  title="Pause"><span>⏸</span></button>
             </div>
