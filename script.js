@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
   }
-  function playTone(freq, type, duration, vol=0.1) {
+  function playTone(freq, type, duration, vol = 0.1) {
     if (!audioCtx) return;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
@@ -77,9 +77,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   function playCorrectSound() {
     initAudio();
-    playTone(523.25, 'sine', 0.15, 0.2); 
-    setTimeout(() => playTone(659.25, 'sine', 0.15, 0.2), 100); 
-    setTimeout(() => playTone(783.99, 'sine', 0.3, 0.2), 200); 
+    playTone(523.25, 'sine', 0.15, 0.2);
+    setTimeout(() => playTone(659.25, 'sine', 0.15, 0.2), 100);
+    setTimeout(() => playTone(783.99, 'sine', 0.3, 0.2), 200);
   }
   function playWrongSound() {
     initAudio();
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     playShootSound();
     isShooting = true;
     balls.forEach(b => b.classList.remove('floating'));
-    
+
     loadedBall.style.opacity = '0';
     muzzleFlash.classList.remove('fire-flash');
     void muzzleFlash.offsetWidth;
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!hit) {
       isShooting = false;
       loadedBall.style.opacity = '1';
-      showToast('💨 Miss!', 'error');
+      showToast('Miss!', 'miss');
       balls.forEach(b => { if (!b.classList.contains('hidden')) b.classList.add('floating'); });
     }
   }

@@ -259,7 +259,7 @@ body {
     flex-shrink: 0;
     z-index: 15;
     cursor: default; /* only cannon body/barrel are interactive */
-    pointer-events: none; /* children override as needed */
+    pointer-events: none; /* children ovFide as needed */
 }
 
 #cannon-pivot {
@@ -499,6 +499,10 @@ body {
 
 .feedback-popup.wrong {
   color: #ff6b6b;
+}
+
+.feedback-popup.miss {
+  color: #5f3d3dff;
 }
 
 @keyframes popFeedback {
