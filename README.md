@@ -1,21 +1,32 @@
-# State Shooter 🎯
+# React + TypeScript + Vite
 
-An interactive, visually stunning geography web game where players shoot glossy bubbles out of a steel cannon to guess US state capitals! 
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Features ✨
-- **Beautiful UI:** Custom glassmorphism overlays, deep 3D glossy bubbles, and a highly realistic steel cannon mount built entirely in CSS.
-- **Engaging Gameplay:** Aim and fire your cannon with smooth physics and trajectory paths to hit the correct state capital.
-- **Satisfying Feedback:** Massive confetti explosions for correct answers, bouncy toast notifications, screen shake on misses, and cannon recoil animations.
-- **Lifelines:** Use the "50/50" lifeline button to remove two incorrect options, or grab a quick hint if you're stuck!
-- **Responsive Design:** Plays perfectly on both desktop browsers and mobile devices.
+Currently, two official plugins are available:
 
-## How to Play 🎮
-1. Read the state name shown at the top of the screen.
-2. Look at the four colored bubbles floating in the sky—each contains a different capital city.
-3. Aim the cannon by clicking and dragging (or touching) anywhere on the screen.
-4. Release to fire! Hit the correct bubble to score a point and trigger a massive confetti blast.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Setup 🚀
-No build tools required! Simply open `index.html` in your web browser, or serve it locally using any basic HTTP server (like VS Code Live Server or python `http.server`).
+## React Compiler
 
-Enjoy shooting those states! 💥
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
+```
+
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.

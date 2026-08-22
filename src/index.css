@@ -15,6 +15,14 @@ body {
     touch-action: none;
 }
 
+#root {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* ─── Game container ─── */
 #game-container {
     width: 100%;
@@ -99,6 +107,8 @@ body {
     transition: opacity 0.3s;
     pointer-events: none;
     cursor: none;
+    width: max-content;
+    max-width: 90%;
 }
 
 .option-pill.removed {
@@ -142,7 +152,9 @@ body {
     font-size: 0.78rem;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-    white-space: nowrap;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left;
 }
 
 /* ─── Play Area ─── */
@@ -150,7 +162,6 @@ body {
     flex: 1;
     position: relative;
     overflow: hidden;
-    /* The cannon can also listen here */
 }
 
 /* ─── Upper Wall (candy bar image) ─── */
@@ -180,7 +191,7 @@ body {
     z-index: 20;
 }
 
-/* ─── Balls (no text, half size ~29px) ─── */
+/* ─── Balls ─── */
 .ball {
     width: 29px;
     height: 29px;
@@ -197,7 +208,6 @@ body {
         0 4px 6px rgba(0,0,0,0.4);
 }
 
-/* Glossy Specular Highlight */
 .ball::after {
     content: '';
     position: absolute;
@@ -224,7 +234,6 @@ body {
 }
 .ball.floating { animation: float 2.8s ease-in-out infinite; }
 
-/* Ball pop burst on correct */
 @keyframes ballPop {
     0%   { transform: scale(1);   opacity: 1; }
     40%  { transform: scale(2.0); opacity: 0.8; }
@@ -232,7 +241,6 @@ body {
 }
 .ball.popping { animation: ballPop 0.5s cubic-bezier(0.36,0.07,0.19,0.97) forwards; pointer-events: none; }
 
-/* Ball bounce entrance */
 @keyframes ballEnter {
     0%   { transform: scale(0) translateY(-30px); opacity: 0; }
     60%  { transform: scale(1.2) translateY(4px);  opacity: 1; }
@@ -241,7 +249,6 @@ body {
 }
 .ball.entering { animation: ballEnter 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 
-/* Ball scatter exit on wrong */
 @keyframes ballExitLeft  { to { transform: translate(-120px, 80px) rotate(-180deg) scale(0); opacity: 0; } }
 @keyframes ballExitRight { to { transform: translate( 120px, 80px) rotate( 180deg) scale(0); opacity: 0; } }
 @keyframes ballExitUp    { to { transform: translate(  20px,-120px) rotate(-90deg)  scale(0); opacity: 0; } }
@@ -258,8 +265,8 @@ body {
     align-items: flex-end;
     flex-shrink: 0;
     z-index: 15;
-    cursor: default; /* only cannon body/barrel are interactive */
-    pointer-events: none; /* children ovFide as needed */
+    cursor: default;
+    pointer-events: none;
 }
 
 #cannon-pivot {
@@ -384,7 +391,6 @@ body {
     border: 2px solid #111;
 }
 
-/* Side mounting brackets for realistic depth */
 #cannon-stand::before, #cannon-stand::after {
     content: '';
     position: absolute;
@@ -478,8 +484,10 @@ body {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Bangers', cursive;
+  white-space: nowrap;
+  font-family: 'Bangers', cursive, 'Inter', sans-serif;
   font-size: clamp(2rem, 6vmin, 3.5rem);
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
   pointer-events: none;
@@ -493,38 +501,16 @@ body {
   animation: popFeedback 1.2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.feedback-popup.correct {
-  color: #69db7c;
-}
-
-.feedback-popup.wrong {
-  color: #ff6b6b;
-}
-
-.feedback-popup.miss {
-  color: #5f3d3dff;
-}
+.feedback-popup.correct { color: #69db7c; }
+.feedback-popup.wrong { color: #ff6b6b; }
+.feedback-popup.miss { color: #5f3d3dff; }
 
 @keyframes popFeedback {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -30%) scale(0.5);
-  }
-  15% {
-    opacity: 1;
-    transform: translate(-50%, -55%) scale(1.1);
-  }
-  30% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  80% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -70%) scale(0.8);
-  }
+  0% { opacity: 0; transform: translate(-50%, -30%) scale(0.5); }
+  15% { opacity: 1; transform: translate(-50%, -55%) scale(1.1); }
+  30% { transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -70%) scale(0.8); }
 }
 
 /* ─── Hint Modal ─── */
@@ -595,6 +581,87 @@ body {
     cursor: pointer;
 }
 
+/* ─── Loading Overlay ─── */
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: #2196f3;
+    z-index: 400;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.loading-overlay .start-btn, .loading-overlay .retry-btn {
+    padding: 12px 30px;
+    font-size: 1.5rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(to bottom, #4dabf7, #1971c2);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.loading-overlay .retry-btn {
+    background: linear-gradient(to bottom, #f06595, #c2255c);
+}
+.loading-overlay .start-btn:active, .loading-overlay .retry-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+.loading-overlay p {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    padding: 0 20px;
+}
+.loading-overlay p.error-text {
+    color: #ff6b6b;
+}
+
+/* ─── Confirm Modal ─── */
+#confirm-modal {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+#confirm-modal .confirm-box {
+    background: linear-gradient(135deg, #fff9c4, #ffe082);
+    padding: 26px 22px 20px;
+    border-radius: 20px;
+    text-align: center;
+    color: #333;
+    width: 82%;
+    max-width: 320px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+#confirm-modal h3 { font-family: 'Inter', sans-serif; font-size: 1.3rem; margin-bottom: 10px; color: #e67700; }
+#confirm-modal p  { font-size: 1rem; font-weight: bold; margin-bottom: 20px; color: #444; line-height: 1.4; }
+.confirm-btns { display: flex; gap: 10px; justify-content: center; }
+.confirm-btns button {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.25);
+}
+.btn-yes { background: linear-gradient(to bottom, #ff6b6b, #c92a2a); }
+.btn-no  { background: linear-gradient(to bottom, #ced4da, #868e96); color: #333 !important; }
+
 /* ─── Cannon recoil ─── */
 @keyframes cannonRecoil {
     0%   { transform: translateX(-50%) translateY(0); }
@@ -614,7 +681,6 @@ body {
 }
 .cannon-shake { animation: cannonShake 0.45s ease-out; }
 
-/* ─── Score counter ─── */
 /* ─── Score ─── */
 #score-bar {
     display: inline-flex;
@@ -628,10 +694,7 @@ body {
     padding: 6px 14px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.3);
 }
-#score-icon {
-    font-size: 1.3rem;
-    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
-}
+#score-icon { font-size: 1.3rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
 #score-value {
     font-family: 'Inter', sans-serif;
     font-size: 1.4rem;
@@ -642,9 +705,7 @@ body {
     filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
     letter-spacing: 1px;
 }
-#score-value.bump {
-    animation: scoreBump 0.35s cubic-bezier(0.34,1.56,0.64,1);
-}
+#score-value.bump { animation: scoreBump 0.35s cubic-bezier(0.34,1.56,0.64,1); }
 @keyframes scoreBump {
     0%   { transform: scale(1); }
     50%  { transform: scale(1.5) rotate(-5deg); }
@@ -656,33 +717,14 @@ body {
     from { opacity: 0; transform: translateY(-10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-.question-entering {
-    animation: questionIn 0.4s ease-out forwards;
-}
+.question-entering { animation: questionIn 0.4s ease-out forwards; }
 
 /* ─── Option pill entering ─── */
 @keyframes pillIn {
     from { opacity: 0; transform: scale(0.7); }
     to   { opacity: 1; transform: scale(1); }
 }
-.option-pill.entering {
-    animation: pillIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
-}
-
-/* ─── Confetti particle ─── */
-.confetti {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-    pointer-events: none;
-    z-index: 100;
-    opacity: 1;
-}
-@keyframes confettiFly {
-    0%   { transform: translate(0,0) rotate(0deg);        opacity: 1; }
-    100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
-}
+.option-pill.entering { animation: pillIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
 
 /* ─── Mobile Responsiveness ─── */
 @media (max-width: 600px) {
