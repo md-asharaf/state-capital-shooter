@@ -313,9 +313,16 @@ export default function App() {
   }, []);
 
   const spawnConfettiBurst = (cx: number, cy: number) => {
+    let globalX = cx;
+    let globalY = cy;
+    if (containerRef.current) {
+      const cRect = containerRef.current.getBoundingClientRect();
+      globalX += cRect.left;
+      globalY += cRect.top;
+    }
     const CONFETTI_COLORS = ['#ffd43b', '#ff6b6b', '#69db7c', '#74c0fc', '#f06595', '#fff', '#a9e34b'];
-    const originX = cx / window.innerWidth;
-    const originY = cy / window.innerHeight;
+    const originX = globalX / window.innerWidth;
+    const originY = globalY / window.innerHeight;
     const count = 300;
     const defaults = { origin: { x: originX, y: originY }, colors: CONFETTI_COLORS, zIndex: 9999, scalar: 1.4, disableForReducedMotion: true };
     const fire = (particleRatio: number, opts: confetti.Options) => confetti(Object.assign({}, defaults, opts, { particleCount: Math.floor(count * particleRatio) }));
