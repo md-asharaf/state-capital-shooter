@@ -13,6 +13,8 @@ import type { QuizQuestion } from './types/api';
 
 type FetchState = 'idle' | 'loading' | 'done' | 'error';
 
+const secureRandom = () => crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296;
+
 export default function App() {
   const [quizFetchState, setQuizFetchState] = useState<FetchState>('idle');
   const [quizError, setQuizError] = useState<string>('');
@@ -88,6 +90,8 @@ export default function App() {
       stateRef.current.allQuestions = data;
       stateRef.current.unusedQuestions = [...data];
       setQuizFetchState('done');
+      setGameStarted(true);
+      setTimeout(loadNextQuestion, 100);
     } catch (err) {
       setQuizError(err instanceof Error ? err.message : 'Failed to fetch quiz data');
       setQuizFetchState('error');
@@ -102,18 +106,13 @@ export default function App() {
     stateRef.current.isShooting = false;
     stateRef.current.isAiming = false;
     setScore(0);
-    setQuestionNumber(1);
+    setQuestionNumber(0);
     setBulletPos(prev => ({ ...prev, visible: false }));
     clearTrajectory();
     fetchQuiz();
   };
 
-  useEffect(() => {
-    if (quizFetchState === 'done' && !gameStarted) {
-      setGameStarted(true);
-      setTimeout(loadNextQuestion, 100);
-    }
-  }, [quizFetchState, gameStarted]);
+
 
 
 
@@ -277,7 +276,7 @@ export default function App() {
   const triggerCannonShake = () => setIsShaking(true);
   const bumpScore = () => setIsBumpingScore(true);
 
-  const loadNextQuestion = () => {
+  function loadNextQuestion() {
     cancelAnimationFrame(stateRef.current.animFrame);
     stateRef.current.isShooting = false;
     stateRef.current.isAiming = false;
@@ -327,7 +326,7 @@ export default function App() {
         paWidth = playAreaRef.current.getBoundingClientRect().width;
       }
 
-      const shuffled = [...GRID_CELLS].sort(() => Math.random() - 0.5);
+      const shuffled = [...GRID_CELLS].sort(() => secureRandom() - 0.5);
       const chosen: { row: number; left: number }[] = [];
       const BALL_D = 29;
       for (const cell of shuffled) {
@@ -401,7 +400,7 @@ export default function App() {
     }
   };
 
-  const fireBullet = (startX: number, startY: number, angleDeg: number) => {
+  function fireBullet(startX: number, startY: number, angleDeg: number) {
     playShootSound();
     stateRef.current.isShooting = true;
 
@@ -468,7 +467,7 @@ export default function App() {
     const wrongIdx = currentOptions
       .map((o, i) => o !== currentQuestion?.answer.value ? i : -1)
       .filter(i => i !== -1)
-      .sort(() => Math.random() - 0.5)
+      .sort(() => secureRandom() - 0.5)
       .slice(0, 2);
 
     setBallStates(prev => prev.map((b, i) => {
