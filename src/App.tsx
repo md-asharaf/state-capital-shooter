@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import confetti from 'canvas-confetti';
 import { fetchQuizData } from './api/fetchQuiz';
+import { playShootSound, playCorrectSound, playWrongSound } from './utils/audio';
+import { spawnConfettiBurst } from './utils/confetti';
+import Toast from './components/ui/Toast';
+import TopHeader from './components/ui/TopHeader';
+import BottomBar from './components/ui/BottomBar';
+import QuestionBoard from './components/game/QuestionBoard';
+import Cannon from './components/game/Cannon';
+import PlayArea from './components/game/PlayArea';
+import { GameOverlay, HintModal, ConfirmModal, PauseOverlay } from './components/ui/Overlays';
 import type { QuizQuestion } from './types/api';
 
 type FetchState = 'idle' | 'loading' | 'done' | 'error';
@@ -107,60 +115,7 @@ export default function App() {
     }
   }, [quizFetchState, gameStarted]);
 
-  const initAudio = () => {
-    if (!stateRef.current.audioCtx) {
-      const Ctx = window.AudioContext || (window as any).webkitAudioContext;
-      if (Ctx) stateRef.current.audioCtx = new Ctx();
-    }
-    if (stateRef.current.audioCtx?.state === 'suspended') {
-      stateRef.current.audioCtx.resume();
-    }
-  };
 
-  const playTone = (freq: number, type: OscillatorType, duration: number, vol = 0.1) => {
-    const ctx = stateRef.current.audioCtx;
-    if (!ctx) return;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-    gain.gain.setValueAtTime(vol, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + duration);
-  };
-
-  const playShootSound = () => {
-    initAudio();
-    const ctx = stateRef.current.audioCtx;
-    if (!ctx) return;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(600, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.3);
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.3);
-  };
-
-  const playCorrectSound = () => {
-    initAudio();
-    playTone(523.25, 'sine', 0.15, 0.2);
-    setTimeout(() => playTone(659.25, 'sine', 0.15, 0.2), 100);
-    setTimeout(() => playTone(783.99, 'sine', 0.3, 0.2), 200);
-  };
-
-  const playWrongSound = () => {
-    initAudio();
-    playTone(200, 'sawtooth', 0.3, 0.2);
-    setTimeout(() => playTone(150, 'sawtooth', 0.4, 0.2), 150);
-  };
 
   const computePivot = () => {
     const pivotEl = document.getElementById('cannon-pivot');
@@ -312,26 +267,7 @@ export default function App() {
     };
   }, []);
 
-  const spawnConfettiBurst = (cx: number, cy: number) => {
-    let globalX = cx;
-    let globalY = cy;
-    if (containerRef.current) {
-      const cRect = containerRef.current.getBoundingClientRect();
-      globalX += cRect.left;
-      globalY += cRect.top;
-    }
-    const CONFETTI_COLORS = ['#ffd43b', '#ff6b6b', '#69db7c', '#74c0fc', '#f06595', '#fff', '#a9e34b'];
-    const originX = globalX / window.innerWidth;
-    const originY = globalY / window.innerHeight;
-    const count = 300;
-    const defaults = { origin: { x: originX, y: originY }, colors: CONFETTI_COLORS, zIndex: 9999, scalar: 1.4, disableForReducedMotion: true };
-    const fire = (particleRatio: number, opts: confetti.Options) => confetti(Object.assign({}, defaults, opts, { particleCount: Math.floor(count * particleRatio) }));
-    fire(0.25, { spread: 26, startVelocity: 55 });
-    fire(0.2, { spread: 60 });
-    fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-    fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-    fire(0.1, { spread: 120, startVelocity: 45 });
-  };
+
 
   const showToastMsg = (msg: string, type: string) => {
     setToast({ msg, type });
@@ -432,7 +368,7 @@ export default function App() {
         next[index].classes = 'popping';
         return next;
       });
-      spawnConfettiBurst(ballCX, ballCY);
+      spawnConfettiBurst(ballCX, ballCY, containerRef.current);
       playCorrectSound();
       showToastMsg('+100 CORRECT!', 'correct');
     } else {
@@ -565,9 +501,7 @@ export default function App() {
     setIsPaused(false);
   };
 
-  const handlePlayAgain = () => {
-    startNewSession();
-  };
+
 
   const togglePause = () => {
     setIsPaused(p => !p);
@@ -577,151 +511,74 @@ export default function App() {
 
   return (
     <div id="game-container" ref={containerRef}>
-
-      {!gameStarted && (
-        <div className="loading-overlay">
-          <img src="./assets/logo.png" alt="Logo" style={{ width: 150, marginBottom: 20 }} />
-          {quizFetchState === 'idle' && (
-            <button className="start-btn" onClick={startNewSession}>Start Game</button>
-          )}
-          {quizFetchState === 'loading' && <p>Loading...</p>}
-          {quizFetchState === 'error' && (
-            <>
-              <p className="error-text">
-                An unexpected error occurred. Please contact support. Reference ID: {quizError}
-              </p>
-              <button className="retry-btn" onClick={fetchQuiz}>Retry</button>
-            </>
-          )}
-        </div>
-      )}
-
-      {showHint && currentQuestion && (
-        <div id="hint-modal">
-          <div className="hint-box">
-            <h3>💡 Hint</h3>
-            <p>{currentQuestion.hint?.value || "No hint available"}</p>
-            <button onClick={() => setShowHint(false)}>Got it!</button>
-          </div>
-        </div>
-      )}
-
-      {gameOver && gameStarted && (
-        <div className="loading-overlay" style={{ zIndex: 450 }}>
-          <h1 style={{ fontSize: '3rem', marginBottom: '10px', color: '#ffd43b', fontFamily: "'Bangers', cursive", letterSpacing: '2px' }}>Game Over!</h1>
-          <p style={{ fontSize: '1.5rem', marginBottom: '30px' }}>Final Score: <strong>{score}</strong></p>
-          <button className="start-btn" onClick={handlePlayAgain}>Play Again</button>
-        </div>
-      )}
-
-      {showConfirmRestart && (
-        <div id="confirm-modal">
-          <div className="confirm-box">
-            <h3>Restart Game?</h3>
-            <p>Are you sure you want to restart?</p>
-            <div className="confirm-btns">
-              <button className="btn-no" onClick={cancelRestart}>No</button>
-              <button className="btn-yes" onClick={confirmRestart}>Yes</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isPaused && !showConfirmRestart && (
-        <div id="pause-overlay" onClick={togglePause}>
-          <div>Paused</div>
-          <p>Tap to resume</p>
-          <div className="resume-hint">Resume</div>
-        </div>
-      )}
-
-      <div id="top-header">
-        <img id="app-logo" src="./assets/logo.png" alt="State Shooter" />
-        <div id="score-bar">
-          <span id="score-icon">🏆</span>
-          <span id="score-value" className={isBumpingScore ? 'bump' : ''} onAnimationEnd={() => setIsBumpingScore(false)}>{score}</span>
-        </div>
-      </div>
-
-      <div id="question-board">
-        <p className="q-label">{questionNumber}. {currentQuestion?.prompt.label || "Question"}</p>
-        <h1 id="state-name">{currentQuestion ? currentQuestion.prompt.value : "Loading…"}</h1>
-        <div id="options-row">
-          {currentOptions.map((opt, i) => (
-            <div
-              key={i}
-              id={`opt-${i}`}
-              className={`option-pill ${pillStates[i].removed ? 'removed' : ''} ${pillStates[i].entering ? 'entering' : ''}`}
-              onAnimationEnd={() => setPillStates(prev => {
-                const next = [...prev];
-                next[i].entering = false;
-                return next;
-              })}
-            >
-              <span className={`pill-dot dot-${['red', 'green', 'gold', 'blue'][i]}`}></span>
-              <span className="pill-text">{opt}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div id="play-area" ref={playAreaRef}>
-        <div id="upper-wall"></div>
-        {ballStates.map((b, i) => (
-          <div
-            key={i}
-            id={`ball-${i}`}
-            className={`ball color-${['red', 'green', 'gold', 'blue'][i]} ${b.classes} ${b.hidden ? 'hidden' : ''}`}
-            style={{ left: b.x ? `${b.x}%` : undefined, top: b.y ? `${b.y}px` : undefined }}
-          ></div>
-        ))}
-      </div>
-
-      <svg id="trajectory-svg">
-        {trajectoryPoints.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r={p.r} fill={p.fill} />
-        ))}
-      </svg>
-      <div id="bullet" className={!bulletPos.visible ? 'hidden' : ''} style={{ left: bulletPos.x, top: bulletPos.y }}></div>
-
-      <div id="cannon-area">
-        <div id="cannon-pivot">
-          <div id="cannon-barrel" style={{ transform: `rotate(${cannonAngle}deg)` }} onMouseDown={handleAimStart} onTouchStart={handleAimStart}>
-            <div id="loaded-ball" style={{ opacity: loadedBallVisible ? 1 : 0 }}></div>
-            <div id="muzzle-flash" className={isMuzzleFlashing ? 'fire-flash' : ''} onAnimationEnd={() => setIsMuzzleFlashing(false)}></div>
-          </div>
-        </div>
-        <div id="cannon-body" className={`${isRecoiling ? 'cannon-recoil' : ''} ${isShaking ? 'cannon-shake' : ''}`} onAnimationEnd={(e) => {
+      <GameOverlay
+        gameStarted={gameStarted}
+        gameOver={gameOver}
+        quizFetchState={quizFetchState}
+        quizError={quizError}
+        score={score}
+        onStartSession={startNewSession}
+        onFetchQuiz={fetchQuiz}
+      />
+      <HintModal
+        showHint={showHint}
+        currentQuestion={currentQuestion}
+        onClose={() => setShowHint(false)}
+      />
+      <ConfirmModal
+        showConfirmRestart={showConfirmRestart}
+        onCancel={cancelRestart}
+        onConfirm={confirmRestart}
+      />
+      <PauseOverlay
+        isPaused={isPaused}
+        showConfirmRestart={showConfirmRestart}
+        onTogglePause={togglePause}
+      />
+      <TopHeader
+        score={score}
+        isBumpingScore={isBumpingScore}
+        onBumpEnd={() => setIsBumpingScore(false)}
+      />
+      <QuestionBoard
+        questionNumber={questionNumber}
+        currentQuestion={currentQuestion}
+        currentOptions={currentOptions}
+        pillStates={pillStates}
+        onPillAnimationEnd={(i) => setPillStates(prev => {
+          const next = [...prev];
+          next[i].entering = false;
+          return next;
+        })}
+      />
+      <PlayArea
+        playAreaRef={playAreaRef}
+        ballStates={ballStates}
+        trajectoryPoints={trajectoryPoints}
+        bulletPos={bulletPos}
+      />
+      <Cannon
+        cannonAngle={cannonAngle}
+        loadedBallVisible={loadedBallVisible}
+        isMuzzleFlashing={isMuzzleFlashing}
+        isRecoiling={isRecoiling}
+        isShaking={isShaking}
+        onAimStart={handleAimStart}
+        onMuzzleFlashEnd={() => setIsMuzzleFlashing(false)}
+        onCannonAnimationEnd={(e) => {
           if (e.animationName === 'cannonRecoil') setIsRecoiling(false);
           if (e.animationName === 'cannonShake') setIsShaking(false);
-        }} onMouseDown={handleAimStart} onTouchStart={handleAimStart}>
-          <div id="cannon-core"></div>
-        </div>
-        <div id="cannon-stand"></div>
-      </div>
-
-      <div id="bottom-bar">
-        <div id="fifty-area">
-          <button id="fifty-fifty-btn" title="50/50" disabled={fiftyDisabled} onClick={useFiftyFifty}>
-            <img src="./assets/fifty.png" alt="50/50" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          </button>
-        </div>
-        <div id="right-btns">
-          <button className="round-btn blue-btn" title="Hint" onClick={() => setShowHint(true)}><span>💡</span></button>
-          <button className="round-btn orange-btn" title="Restart" onClick={onInGameRestartClick}>
-            <span style={{ color: 'white', fontSize: '1.4rem', paddingBottom: '2px' }}>🔄</span>
-          </button>
-          <button className="round-btn pink-btn" title="Pause" onClick={togglePause}>
-            <span>{isPaused ? '▶️' : '⏸'}</span>
-          </button>
-        </div>
-      </div>
-
-      {toast && (
-        <div className={`feedback-popup ${toast.type}`}>
-          {toast.msg}
-        </div>
-      )}
+        }}
+      />
+      <BottomBar
+        fiftyDisabled={fiftyDisabled}
+        isPaused={isPaused}
+        onUseFiftyFifty={useFiftyFifty}
+        onShowHint={() => setShowHint(true)}
+        onRestartClick={onInGameRestartClick}
+        onTogglePause={togglePause}
+      />
+      <Toast toast={toast} />
     </div>
   );
 }
