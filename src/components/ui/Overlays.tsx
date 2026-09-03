@@ -64,7 +64,7 @@ export function HintModal({ showHint, currentQuestion, onClose }: HintModalProps
     <div id="hint-modal">
       <div className="hint-box">
         <h3>💡 Hint</h3>
-        <p>{currentQuestion.hint?.value || "No hint available"}</p>
+        <p>{currentQuestion.hint || "No hint available"}</p>
         <button onClick={onClose}>Got it!</button>
       </div>
     </div>

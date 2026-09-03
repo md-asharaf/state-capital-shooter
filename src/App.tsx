@@ -358,7 +358,7 @@ export default function App() {
   };
 
   const checkAnswer = (index: number, ballCX: number, ballCY: number) => {
-    const isCorrect = stateRef.current.currentOptions[index] === stateRef.current.currentQuestion?.answer.value;
+    const isCorrect = stateRef.current.currentOptions[index] === stateRef.current.currentQuestion?.answer;
     if (isCorrect) {
       setScore(s => s + 100);
       bumpScore();
@@ -465,7 +465,7 @@ export default function App() {
     if (fiftyDisabled || stateRef.current.isShooting) return;
     setFiftyDisabled(true);
     const wrongIdx = currentOptions
-      .map((o, i) => o !== currentQuestion?.answer.value ? i : -1)
+      .map((o, i) => o !== currentQuestion?.answer ? i : -1)
       .filter(i => i !== -1)
       .sort(() => secureRandom() - 0.5)
       .slice(0, 2);

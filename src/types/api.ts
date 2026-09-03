@@ -1,12 +1,7 @@
-export interface LabeledField {
-  label: string;
-  value: string;
-}
-
 export interface QuizQuestion {
-  readonly prompt: LabeledField;
-  readonly answer: LabeledField;
-  readonly hint?: LabeledField;
+  readonly question: string;
+  readonly answer: string;
+  readonly hint?: string;
   readonly options: readonly string[];
 }
 

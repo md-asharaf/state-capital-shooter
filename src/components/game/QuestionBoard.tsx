@@ -17,8 +17,8 @@ export default function QuestionBoard({
 }: Props) {
   return (
     <div id="question-board">
-      <p className="q-label">{questionNumber}. {currentQuestion?.prompt.label || "Question"}</p>
-      <h1 id="state-name">{currentQuestion ? currentQuestion.prompt.value : "Loading…"}</h1>
+      <p className="q-label">{questionNumber}. Question</p>
+      <h1 id="state-name">{currentQuestion ? currentQuestion.question : "Loading…"}</h1>
       <div id="options-row">
         {currentOptions.map((opt, i) => (
           <div
