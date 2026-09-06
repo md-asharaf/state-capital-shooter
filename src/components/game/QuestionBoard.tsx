@@ -19,7 +19,7 @@ export default function QuestionBoard({
 }: Props) {
   return (
     <div id="question-board">
-      <p className="q-label">Q{questionNumber}/{questionCount} </p>
+      <p className="q-label">#{questionNumber} / {questionCount} </p>
       <h1 id="state-name">{currentQuestion ? currentQuestion.question : "Loading…"}</h1>
       <div id="options-row">
         {currentOptions.map((opt, i) => (
