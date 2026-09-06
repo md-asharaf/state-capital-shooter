@@ -60,7 +60,6 @@ export default function App() {
 
   const [fiftyDisabled, setFiftyDisabled] = useState(false);
 
-  // Mutable Game State
   const stateRef = useRef({
     isShooting: false,
     isAiming: false,
@@ -542,6 +541,7 @@ export default function App() {
       />
       <QuestionBoard
         questionNumber={questionNumber}
+        questionCount={stateRef.current.allQuestions.length}
         currentQuestion={currentQuestion}
         currentOptions={currentOptions}
         pillStates={pillStates}

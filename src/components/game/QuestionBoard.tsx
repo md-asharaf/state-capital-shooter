@@ -2,6 +2,7 @@ import type { QuizQuestion } from '../../types/api';
 
 interface Props {
   questionNumber: number;
+  questionCount: number;
   currentQuestion: QuizQuestion | null;
   currentOptions: string[];
   pillStates: { id: number; removed: boolean; entering: boolean }[];
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function QuestionBoard({
+  questionCount,
   questionNumber,
   currentQuestion,
   currentOptions,
@@ -17,7 +19,7 @@ export default function QuestionBoard({
 }: Props) {
   return (
     <div id="question-board">
-      <p className="q-label">{questionNumber}. Question</p>
+      <p className="q-label">Q{questionNumber}/{questionCount} </p>
       <h1 id="state-name">{currentQuestion ? currentQuestion.question : "Loading…"}</h1>
       <div id="options-row">
         {currentOptions.map((opt, i) => (
