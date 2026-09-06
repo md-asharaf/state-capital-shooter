@@ -317,7 +317,7 @@ export default function App() {
       const GRID_CELLS = [];
       for (let r = 0; r < 4; r++) {
         for (let c = 0; c < 9; c++) {
-          GRID_CELLS.push({ row: r, left: 8 + c * 8.5 });
+          GRID_CELLS.push({ row: r, col: c, left: 8 + c * 8.5 });
         }
       }
 
@@ -327,13 +327,14 @@ export default function App() {
       }
 
       const shuffled = [...GRID_CELLS].sort(() => secureRandom() - 0.5);
-      const chosen: { row: number; left: number }[] = [];
+      const chosen: { row: number; col: number; left: number }[] = [];
       const BALL_D = 29;
       for (const cell of shuffled) {
         const cx = (cell.left / 100) * paWidth;
         const cy = 25 + cell.row * 39;
         let ok = true;
         for (const c of chosen) {
+          if (c.row === cell.row || c.col === cell.col) { ok = false; break; }
           const ox = (c.left / 100) * paWidth;
           const oy = 25 + c.row * 39;
           if (Math.hypot(cx - ox, cy - oy) < BALL_D + 8) { ok = false; break; }

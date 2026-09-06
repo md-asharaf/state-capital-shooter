@@ -43,14 +43,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
+    padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
     z-index: 15;
     position: relative;
     border-bottom: 0.5px solid rgba(255,255,255,0.1);
     flex-shrink: 0;
 }
 #app-logo {
-    height: 40px;
+    height: clamp(30px, 6vh, 40px);
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
@@ -59,7 +59,7 @@ body {
 /* ─── Question Board ─── */
 #question-board {
     text-align: center;
-    padding: 10px 12px 8px;
+    padding: clamp(6px, 1.5vh, 10px) clamp(8px, 2vw, 12px) clamp(4px, 1vh, 8px);
     z-index: 10;
     flex-shrink: 0;
     position: relative;
@@ -67,21 +67,21 @@ body {
 
 .q-label {
     font-family: 'Inter', sans-serif;
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vmin, 1.2rem);
     color: rgba(255,255,255,0.8);
     letter-spacing: 1px;
 }
 
 #state-name {
     font-family: 'Inter', sans-serif;
-    font-size: 1.8rem;
+    font-size: clamp(1.4rem, 4vmin, 1.8rem);
     font-weight: 800;
     background: linear-gradient(135deg, #ffd43b, #ff922b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
     margin-top: 2px;
-    margin-bottom: 10px;
+    margin-bottom: clamp(6px, 1.5vh, 10px);
 }
 
 /* ─── Options Row ─── */
@@ -89,12 +89,12 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 6px 10px;
+    gap: clamp(4px, 1vw, 6px) clamp(6px, 1.5vw, 10px);
     padding-bottom: 4px;
     pointer-events: none; /* options not clickable */
     user-select: none;
     margin-top: 4px;
-    margin-bottom: 10px;
+    margin-bottom: clamp(6px, 1.5vh, 10px);
 }
 
 .option-pill {
@@ -103,7 +103,7 @@ body {
     gap: 5px;
     background: rgba(255,255,255,0.15);
     border-radius: 20px;
-    padding: 4px 10px 4px 6px;
+    padding: clamp(3px, 1vh, 4px) clamp(8px, 2vw, 10px) clamp(3px, 1vh, 4px) clamp(4px, 1vw, 6px);
     transition: opacity 0.3s;
     pointer-events: none;
     cursor: none;
@@ -116,8 +116,8 @@ body {
 }
 
 .pill-dot {
-    width: 14px;
-    height: 14px;
+    width: clamp(10px, 2.5vmin, 14px);
+    height: clamp(10px, 2.5vmin, 14px);
     border-radius: 50%;
     flex-shrink: 0;
     position: relative;
@@ -149,7 +149,7 @@ body {
 
 .pill-text {
     font-family: 'Inter', sans-serif;
-    font-size: 0.78rem;
+    font-size: clamp(0.65rem, 1.8vmin, 0.78rem);
     color: #fff;
     text-shadow: 0 1px 2px rgba(0,0,0,0.4);
     white-space: normal;
@@ -193,8 +193,8 @@ body {
 
 /* ─── Balls ─── */
 .ball {
-    width: 29px;
-    height: 29px;
+    width: clamp(24px, 6vmin, 29px);
+    height: clamp(24px, 6vmin, 29px);
     border-radius: 50%;
     position: absolute;
     cursor: none;
@@ -422,13 +422,13 @@ body {
 
 /* ─── Floor / Bottom Bar ─── */
 #bottom-bar {
-    height: 88px;
+    height: clamp(70px, 12vh, 88px);
     background: linear-gradient(to bottom, #c8a06a 0%, #8B6914 100%);
     border-top: 3px solid #a07840;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 0 clamp(10px, 3vw, 16px);
     flex-shrink: 0;
     z-index: 10;
     box-shadow: inset 0 2px 6px rgba(255,255,255,0.15), inset 0 -2px 4px rgba(0,0,0,0.2);
@@ -447,8 +447,8 @@ body {
     outline: none;
     cursor: pointer;
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: clamp(40px, 10vmin, 50px);
+    height: clamp(40px, 10vmin, 50px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -461,12 +461,12 @@ body {
 #right-btns { display: flex; gap: 8px; align-items: center; }
 
 .round-btn {
-    width: 50px;
-    height: 50px;
+    width: clamp(40px, 10vmin, 50px);
+    height: clamp(40px, 10vmin, 50px);
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    font-size: 1.25rem;
+    font-size: clamp(1rem, 2.5vmin, 1.25rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -535,17 +535,17 @@ body {
     max-width: 320px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
-.hint-box h3 { font-family: 'Inter', sans-serif; font-size: 1.3rem; margin-bottom: 10px; color: #e67700; }
-.hint-box p  { font-size: 1rem; font-weight: bold; margin-bottom: 16px; color: #444; line-height: 1.4; }
+.hint-box h3 { font-family: 'Inter', sans-serif; font-size: clamp(1.1rem, 3vmin, 1.3rem); margin-bottom: 10px; color: #e67700; }
+.hint-box p  { font-size: clamp(0.9rem, 2.5vmin, 1rem); font-weight: bold; margin-bottom: 16px; color: #444; line-height: 1.4; }
 .hint-box button {
     background: linear-gradient(to bottom, #ffd43b, #e67700);
     color: #fff;
     border: none;
-    padding: 9px 26px;
+    padding: clamp(7px, 2vh, 9px) clamp(20px, 5vw, 26px);
     border-radius: 12px;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vmin, 1rem);
     box-shadow: 0 3px 0 rgba(0,0,0,0.25);
     transition: transform 0.1s;
 }
@@ -644,17 +644,17 @@ body {
     max-width: 320px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
-#confirm-modal h3 { font-family: 'Inter', sans-serif; font-size: 1.3rem; margin-bottom: 10px; color: #e67700; }
-#confirm-modal p  { font-size: 1rem; font-weight: bold; margin-bottom: 20px; color: #444; line-height: 1.4; }
+#confirm-modal h3 { font-family: 'Inter', sans-serif; font-size: clamp(1.1rem, 3vmin, 1.3rem); margin-bottom: 10px; color: #e67700; }
+#confirm-modal p  { font-size: clamp(0.9rem, 2.5vmin, 1rem); font-weight: bold; margin-bottom: 20px; color: #444; line-height: 1.4; }
 .confirm-btns { display: flex; gap: 10px; justify-content: center; }
 .confirm-btns button {
     flex: 1;
     border: none;
-    padding: 10px;
+    padding: clamp(7px, 2vh, 10px);
     border-radius: 12px;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vmin, 1rem);
     font-weight: bold;
     color: white;
     box-shadow: 0 3px 0 rgba(0,0,0,0.25);
@@ -691,13 +691,13 @@ body {
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 20px;
-    padding: 6px 14px;
+    padding: clamp(4px, 1vh, 6px) clamp(10px, 2.5vw, 14px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.3);
 }
 #score-icon { font-size: 1.3rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
 #score-value {
     font-family: 'Inter', sans-serif;
-    font-size: 1.4rem;
+    font-size: clamp(1.1rem, 3vmin, 1.4rem);
     font-weight: 800;
     background: linear-gradient(135deg, #ffe066, #f59f00);
     -webkit-background-clip: text;
